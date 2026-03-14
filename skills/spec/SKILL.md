@@ -1,6 +1,6 @@
 ---
 description: Create or view a project spec with design and tasks
-argument-hint: "[name] or [from-jira TICKET-123]"
+argument-hint: "[name]"
 ---
 
 # Spec
@@ -12,7 +12,7 @@ Create structured specs that decompose features into design and implementation t
 Parse the argument to determine the mode:
 
 1. **No argument** — interactive mode: ask what to build
-2. **`from-jira TICKET-123`** — pull Jira issue as input brief (use `get_jira_issue` MCP tool)
+2. **`from-issue URL-or-ID`** — pull issue details as input brief (uses available tools)
 3. **`@file.md`** — generate spec from attached document content
 4. **Existing spec name** — show status of that spec
 5. **New name** — interactive mode, pre-set the spec name
@@ -31,7 +31,7 @@ Read all files in `docs/specs/{spec-name}/`. Display:
 ### Step 1: Get Feature Description
 
 - **Interactive**: Ask "What do you want to build?" then ask clarifying questions **one at a time** to refine the idea. Keep responses short (~200-300 words). Do not dump a wall of text.
-- **From Jira**: Fetch issue details with `get_jira_issue`, use title + description + acceptance criteria as brief
+- **From issue**: Fetch issue details using available tools, use title + description + acceptance criteria as brief
 - **From file**: Read the attached file content as the brief
 
 ### Step 2: Explore Codebase

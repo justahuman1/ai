@@ -16,7 +16,8 @@
 
 ```mermaid
 graph LR
-    {Component diagram showing relationships}
+    A[Component A] --> B[Component B]
+    B --> C[Component C]
 ```
 
 ## Components
@@ -41,7 +42,10 @@ graph LR
 
 ```mermaid
 sequenceDiagram
-    {Sequence diagram showing the primary data flow}
+    Client->>Server: Request
+    Server->>Database: Query
+    Database-->>Server: Result
+    Server-->>Client: Response
 ```
 
 ## Testing Strategy

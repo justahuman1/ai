@@ -42,7 +42,7 @@ Decomposes a feature into a design doc and implementation tasks. Specs live in `
 
 Features:
 - Auto-detects tier based on scope (overridable)
-- Can pull from Jira issues (`/spec from-jira TICKET-123`)
+- Can pull from issue trackers or external briefs (`/spec from-issue URL-or-ID`)
 - Chunked output — reviews ~200-300 words at a time for feedback
 - Tasks include inline acceptance criteria
 
