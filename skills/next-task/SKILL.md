@@ -1,6 +1,6 @@
 ---
 description: Execute the next pending task from a spec. Auto-commits on completion.
-argument-hint: "<spec-name>"
+argument-hint: "[spec-name]"
 ---
 
 # Next Task
@@ -11,7 +11,13 @@ Execute the next pending task from a spec, verify it, update tracking state, and
 
 ### Step 1: Find the Spec
 
-- If no spec-name provided, list available specs in `docs/specs/` and ask which one
+- If spec-name provided, use it directly
+- If no spec-name provided, infer:
+  1. If the current conversation already references a spec name, use it
+  2. Look for `docs/specs/*/next-step.md` files with a Current Task (not all tasks complete)
+  3. If exactly one active spec found, use it
+  4. If multiple active specs, list them and ask which one
+  5. If none found, report "No active specs in docs/specs/" and stop
 - Read all files in `docs/specs/{spec-name}/`
 
 ### Step 2: Determine Current Task
@@ -20,32 +26,37 @@ In order of precedence:
 
 1. **`next-step.md` exists** — read the Current Task field
 2. **`next-step.md` missing but `tasks.md` exists** — first unchecked task; create `next-step.md`
-3. **Only `spec.md` (micro tier)** — first unchecked item in the How section
-4. **All tasks complete** — report "All tasks complete for {spec-name}", stop
+3. **All tasks complete** — report "All tasks complete for {spec-name}", stop
 
 ### Step 3: Read Context
 
 - Read files listed in the current task's sub-steps to understand existing code
-- Read `requirements.md` to understand acceptance criteria being targeted
 - Read `design.md` (if it exists) for architectural guidance
+- Read `next-step.md` for session context from previous tasks (learnings, decisions)
+- Acceptance criteria are inline in the task — no separate file to consult
 
-### Step 4: Implement the Task
+### Step 4: Plan
 
-- Make the code changes described in the task
-- Follow patterns and conventions discovered in existing code
-- Write tests as specified in the task sub-steps
+- Enter plan mode
+- Propose approach: files to touch, test strategy, implementation plan
+- User reviews and may add context (e.g., "last task revealed X")
+- Write plan file, exit plan mode
+- Include `**Spec:** {spec-name}` at the top of the plan so the spec name survives context clearing
 
-### Step 5: Verify
+### Step 5: TDD Execution
 
-- Run relevant tests (find and use the project's test runner)
-- Check that acceptance criteria from the referenced requirements are met
-- If tests fail, fix and re-run before proceeding
+- Write a failing test that encodes the task's acceptance criteria
+- Implement code to make the test pass
+- Run all relevant tests — fix until green
+- If TDD doesn't apply (e.g., config changes, template edits, deletions), skip the test step and verify manually
 
 ### Step 6: Update State
 
-- **`tasks.md`** (or `spec.md` for micro): check off the completed task `- [x]`
-- **`requirements.md`** (if present): check off any requirements whose acceptance criteria are now fully satisfied
-- **`next-step.md`**: move completed task to Done list, set next Current Task
+- **`tasks.md`**: check off the completed task `- [x]`
+- **`next-step.md`**: move completed task to Done list, set next Current Task, and add a **Context** section capturing:
+  - What was learned or changed during this task
+  - Decisions made that affect upcoming work
+  - Any adjustments to the remaining plan
 
 Example `next-step.md` update:
 ```markdown
@@ -56,6 +67,11 @@ Task 3: Add input validation
 
 ## Status
 Not started
+
+## Context
+- Task 2 revealed the data model needs a `validated` flag — added to schema
+- Decided to use zod for validation since the project already depends on it
+- Task 4 (API endpoints) will need to call validation before persistence
 
 ## Done
 - Task 1: Set up project structure
@@ -84,7 +100,7 @@ Then stop. Do not auto-start the next task.
 
 - Always verify (run tests) before marking a task done
 - If blocked, update `next-step.md` status to `Blocked: {reason}` and stop
-- Don't modify requirements or design content — only check off their checkboxes
+- Don't modify `design.md` content — it's a reference, not a living document
 - One commit per task
 - Don't skip tasks — execute them in order
 - If running in plan mode, include "Do not start the next task without user asking" in the plan output. The plan survives context clearing; behavioral rules do not.

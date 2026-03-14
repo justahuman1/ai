@@ -1,11 +1,11 @@
 ---
-description: Create or view a project spec with requirements, design, and tasks
+description: Create or view a project spec with design and tasks
 argument-hint: "[name] or [from-jira TICKET-123]"
 ---
 
 # Spec
 
-Create structured specs that decompose features into requirements, design, and implementation tasks. Specs live in `docs/specs/{spec-name}/` within the current repo.
+Create structured specs that decompose features into design and implementation tasks. Specs live in `docs/specs/{spec-name}/` within the current repo.
 
 ## Invocation Modes
 
@@ -21,8 +21,8 @@ Parse the argument to determine the mode:
 
 Read all files in `docs/specs/{spec-name}/`. Display:
 
-- Spec tier (micro/quick/full)
-- Requirements count with completion: `[3/7 requirements satisfied]`
+- Spec tier (standard/full)
+- Task progress: `[X/Y tasks complete]`
 - Current task from `next-step.md` (if present)
 - Suggest: "Run `/next-task {spec-name}` to execute the next task"
 
@@ -30,7 +30,7 @@ Read all files in `docs/specs/{spec-name}/`. Display:
 
 ### Step 1: Get Feature Description
 
-- **Interactive**: Ask "What do you want to build?" — gather enough detail for scope assessment
+- **Interactive**: Ask "What do you want to build?" then ask clarifying questions **one at a time** to refine the idea. Keep responses short (~200-300 words). Do not dump a wall of text.
 - **From Jira**: Fetch issue details with `get_jira_issue`, use title + description + acceptance criteria as brief
 - **From file**: Read the attached file content as the brief
 
@@ -44,23 +44,21 @@ Use Glob and Grep to understand:
 
 ### Step 3: Auto-Detect Tier
 
-Based on scope, select a tier. The user can override by saying "make this full/quick/micro".
+Based on scope, select a tier. The user can override by saying "make this full/standard".
 
 | Tier | When | Files Generated |
 |------|------|-----------------|
-| **Micro** | <1 day, 1-3 files | `spec.md` only |
-| **Quick** | 1-3 days | `requirements.md` + `tasks.md` + `next-step.md` |
-| **Full** | 3+ days or cross-cutting | `requirements.md` + `design.md` + `tasks.md` + `next-step.md` |
+| **Standard** | 1-3 days | `tasks.md` + `next-step.md` |
+| **Full** | 3+ days or cross-cutting | `design.md` + `tasks.md` + `next-step.md` |
 
 ### Step 4: Generate Spec Files
 
-Create `docs/specs/{spec-name}/` directory and generate files using the templates in `~/.claude/skills/spec/templates/`:
+Create `docs/specs/{spec-name}/` directory and generate files using the [templates/](templates/):
 
-- **Micro**: Use `templates/micro.md` structure for a single `spec.md`
-- **Quick**: Use `templates/requirements.md` for `requirements.md`, `templates/tasks.md` for `tasks.md`
-- **Full**: Use all three — `templates/requirements.md`, `templates/design.md`, `templates/tasks.md`
+- **Standard**: Use `templates/tasks.md` for `tasks.md`
+- **Full**: Use `templates/design.md` for `design.md`, `templates/tasks.md` for `tasks.md`
 
-For Quick and Full tiers, also generate `next-step.md`:
+For both tiers, also generate `next-step.md`:
 
 ```markdown
 # Next Step
@@ -77,24 +75,30 @@ Not started
 
 **Generation rules:**
 - Fill in the templates with real content based on the feature brief and codebase exploration
-- Use EARS format (WHEN/IF/WHILE/WHERE + SHALL) for all acceptance criteria
 - Reference actual files and patterns discovered in Step 2
 - Tasks should be concrete coding activities producing testable code
 - Two-level max task hierarchy (task -> sub-tasks)
-- Each task should reference which requirements it satisfies
+- Each task includes inline acceptance criteria describing done
 - **Every task AND sub-task MUST have a `- [ ]` checkbox** — this is how `/next-task` tracks progress. Match the template format exactly:
   ```
   - [ ] 1. Top-level task title
     - [ ] 1.1 Sub-task title
       - Implementation detail (no checkbox — these are just notes)
-      - _Requirements: [REQ-1]_
+      - _Acceptance: [criteria]_
   ```
+
+**Chunked output — do not generate the entire spec at once:**
+- Output ~200-300 words at a time, then **stop and ask the user if it looks right** before continuing
+- Always finish the current paragraph — going over 300 words to complete a thought is fine, cutting mid-sentence is not
+- This applies to both design.md and tasks.md generation
+- Incorporate user feedback into subsequent output — adjust direction based on what they say, don't just append
+- The user can ask to increase the chunk size if they want faster output
+- The full documents still get written; this is about pacing output for careful user review
 
 ### Step 5: Present Summary
 
-Show:
+After all sections have been reviewed and written, show:
 - Tier selected and why
-- Number of requirements generated
-- Number of tasks generated
+- Total number of tasks generated
 - First task title
 - Suggest: "Run `/next-task {spec-name}` to start implementation"
