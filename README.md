@@ -71,6 +71,16 @@ ln -s ~/.config/ai-private/skills/my-skill ~/.claude/skills/my-skill
 
 You can version `~/.config/ai-private/` in a separate (private) repo.
 
+## Roadmap
+
+> `/spec` plans it. `/next-task` runs it. `/bubble` isolates it. Teams parallelize it.
+
+**[`beta/agent-teams`] Agent teams support** — Teach `/spec` to generate dependency-annotated tasks so [Claude Code agent teams](https://code.claude.com/docs/en/agent-teams) can parallelize work from a spec. The lead reads `tasks.md`, sees what's independent, and assigns parallel work to teammates. `/next-task` and teams compose naturally — use whatever fits your task.
+
+**[`beta/agent-teams`] `/bubble` — Isolated task execution** — A skill that runs spec tasks in [devcontainers](https://code.claude.com/docs/en/devcontainer) with `--dangerously-skip-permissions` for secure, unattended execution. `/bubble my-spec` launches a container and runs `/next-task` inside it. Combined with teams: each teammate gets its own bubble.
+
+Both specs live on the `beta/agent-teams` branch and we're dogfooding them — using `/spec` and `/next-task` to build the features themselves.
+
 ## Prior Art
 
 Forked from [Kiro](https://github.com/jasonkneen/kiro). Tried [GSD](https://github.com/gsd-build/get-shit-done/) but it was too heavyweight — 20+ agent types, complex orchestration, opaque state files. This workflow has 2 skills, plain markdown files you can edit by hand, and a state tracker (`next-step.md`) that's a few lines of text.
