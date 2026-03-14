@@ -1,6 +1,6 @@
 # ai dotfiles
 
-AI skills and config for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Lightweight spec-based development workflow — structured specs, TDD execution, one task at a time.
+AI skills and config for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). **Lightweight** spec-based development workflow — minimal abstraction, plain markdown you can read and edit, structured specs, TDD execution, one task at a time.
 
 ## Setup
 
