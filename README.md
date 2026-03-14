@@ -59,6 +59,17 @@ Picks up the next pending task from a spec and executes it:
 
 Auto-infers which spec to use if only one is active. Captures context between tasks so you (or Claude) can pick up where you left off.
 
+## Experimental: Agent Teams + Bubble
+
+We're experimenting with [Claude Code agent teams](https://code.claude.com/docs/en/agent-teams) and isolated execution via [devcontainers](https://code.claude.com/docs/en/devcontainer). The vision:
+
+> `/spec` plans it. `/next-task` runs it. `/bubble` isolates it. Teams parallelize it.
+
+- **Agent teams**: `/spec` generates dependency-annotated tasks so a team lead can assign parallel work to teammates
+- **`/bubble`**: runs spec tasks in isolated devcontainers with `--dangerously-skip-permissions` for unattended execution
+
+Both are in-progress — see `docs/specs/agent-teams-support/` and `docs/specs/bubble/` for the specs. We're dogfooding these specs to build the features themselves.
+
 ## Adding a Private Layer
 
 Create a separate directory for skills you don't want public:
