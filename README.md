@@ -37,8 +37,8 @@ Decomposes a feature into a design doc and implementation tasks. Specs live in `
 
 | Tier | When | Files |
 |------|------|-------|
-| Standard | 1-3 days | `tasks.md` + `next-step.md` |
-| Full | 3+ days or cross-cutting | `design.md` + `tasks.md` + `next-step.md` |
+| Standard | 1-3 days | `tasks.md` + `progress.md` |
+| Full | 3+ days or cross-cutting | `design.md` + `tasks.md` + `progress.md` |
 
 Features:
 - Auto-detects tier based on scope (overridable)
@@ -54,7 +54,7 @@ Picks up the next pending task from a spec and executes it:
 2. Write a failing test (when applicable)
 3. Implement code to pass
 4. Verify all tests green
-5. Update spec state (`tasks.md` checkboxes, `next-step.md` context)
+5. Update spec state (`tasks.md` checkboxes, `progress.md` context)
 6. Commit with `spec/{name}: task N - {title}`
 
 Auto-infers which spec to use if only one is active. Captures context between tasks so you (or Claude) can pick up where you left off.
@@ -83,4 +83,4 @@ Both specs live on the `beta/agent-teams` branch and we're dogfooding them — u
 
 ## Prior Art
 
-Forked from [Kiro](https://github.com/jasonkneen/kiro). Tried [GSD](https://github.com/gsd-build/get-shit-done/) but it was too heavyweight — 20+ agent types, complex orchestration, opaque state files. This workflow has 2 skills, plain markdown files you can edit by hand, and a state tracker (`next-step.md`) that's a few lines of text.
+Forked from [Kiro](https://github.com/jasonkneen/kiro). Tried [GSD](https://github.com/gsd-build/get-shit-done/) but it was too heavyweight — 20+ agent types, complex orchestration, opaque state files. This workflow has 2 skills, plain markdown files you can edit by hand, and a state tracker (`progress.md`) that's a few lines of text.

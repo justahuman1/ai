@@ -23,7 +23,7 @@ Read all files in `docs/specs/{spec-name}/`. Display:
 
 - Spec tier (standard/full)
 - Task progress: `[X/Y tasks complete]`
-- Current task from `next-step.md` (if present)
+- Current task from `progress.md` (if present)
 - Suggest: "Run `/next-task {spec-name}` to execute the next task"
 
 ## If Creating New Spec
@@ -48,8 +48,8 @@ Based on scope, select a tier. The user can override by saying "make this full/s
 
 | Tier | When | Files Generated |
 |------|------|-----------------|
-| **Standard** | 1-3 days | `tasks.md` + `next-step.md` |
-| **Full** | 3+ days or cross-cutting | `design.md` + `tasks.md` + `next-step.md` |
+| **Standard** | 1-3 days | `tasks.md` + `progress.md` |
+| **Full** | 3+ days or cross-cutting | `design.md` + `tasks.md` + `progress.md` |
 
 ### Step 4: Generate Spec Files
 
@@ -58,16 +58,19 @@ Create `docs/specs/{spec-name}/` directory and generate files using the [templat
 - **Standard**: Use `templates/tasks.md` for `tasks.md`
 - **Full**: Use `templates/design.md` for `design.md`, `templates/tasks.md` for `tasks.md`
 
-For both tiers, also generate `next-step.md`:
+For both tiers, also generate `progress.md`:
 
 ```markdown
-# Next Step
+# Progress
 
 ## Current Task
 Task 1: {first task title from tasks.md}
 
 ## Status
 Not started
+
+## Lessons
+(none yet)
 
 ## Done
 (none yet)
